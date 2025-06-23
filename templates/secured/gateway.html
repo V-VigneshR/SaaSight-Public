@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Welcome, {{ current_user.username }}!{% endblock %}
+
+{% block content %}
+<main class="container mt-5 text-center">
+    <h1 class="mb-4">Welcome to SaaSight </h1>
+
+    <div class="bg-light bg-opacity-75 border rounded p-4 mx-auto shadow-sm" style="max-width: 600px;">
+        <p class="fs-5"><strong>Username:</strong> {{ current_user.username }}</p>
+        <p class="fs-5"><strong>Role:</strong> {{ current_user.role }}</p>
+
+        {% if current_user.role == 'USER' %}
+            <a href="{{ url_for('main.user_secured') }}" class="btn btn-outline-primary mt-3">Go to User Dashboard</a>
+        {% elif current_user.role == 'MANAGER' %}
+            <a href="{{ url_for('main.manager_secured') }}" class="btn btn-outline-warning mt-3">Go to Manager Dashboard</a>
+        {% endif %}
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('main.home') }}" class="btn btn-secondary me-2">🏠 Home</a>
+        <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

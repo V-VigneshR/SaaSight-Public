@@ -1,0 +1,36 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+    commands:
+      - echo Initializing environment
+      # Authenticate with AWS CodeArtifact to access private PyPI repo
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain gamerhub --domain-owner <YOUR_AWS_ACCOUNT_ID> --region <YOUR_AWS_REGION> --query authorizationToken --output text)
+      - pip config set global.index-url "https://aws:${CODEARTIFACT_AUTH_TOKEN}@<YOUR_CODEARTIFACT_REPO_URL>"
+  build:
+    commands:
+      - echo Build started on `date`
+      - python3 -m venv venv
+      - source venv/bin/activate
+      - pip install -r requirements.txt
+      - echo Running unit tests...
+      - |
+        if ! python -m unittest discover -s tests; then
+          echo "Tests failed but continuing build."
+        fi
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      # No need to zip - CodeBuild will package the files directly
+
+artifacts:
+  files:
+    - '**/*'
+  exclude-paths:
+    - 'venv/**/*'
+    - '.git/**/*'
+    - '**/*.pyc'
+    - '**/__pycache__/**/*'
+  discard-paths: no

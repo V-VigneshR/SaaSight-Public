@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Add a SaaS Product{% endblock %}
+
+{% block content %}
+<main class="container">
+    <div class="p-4 p-md-5 mb-4 text-center">
+        <div class="container col-md-6">
+
+            {% if current_user.role != 'MANAGER' %}
+                <h2 class="text-danger">Access Denied</h2>
+                <p class="lead">Only managers can add SaaS products. You're not permitted here, homie.</p>
+                <a class="btn btn-secondary" href="{{ url_for('main.home') }}">Return to Home</a>
+            {% else %}
+                <h1>Add a SaaS Product</h1>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="bg-light border rounded py-3 my-3">
+                    <form action="{{ url_for('main.add_product') }}" method="POST">
+                        {{ form.hidden_tag() }}
+
+                        <label for="name">Product Name:</label>
+                        {{ form.name(class="form-control") }}
+                        <br><br>
+
+                        <label for="description">Description:</label>
+                        {{ form.description(class="form-control") }}
+                        <br><br>
+
+                        <label for="price">Price (USD):</label>
+                        {{ form.price(class="form-control") }}
+                        <br><br>
+
+                        <label for="quantity">Available Licenses:</label>
+                        {{ form.quantity(class="form-control") }}
+                        <br><br>
+
+                        <label for="category">Category:</label>
+                        {{ form.category(class="form-select") }}
+                        <br><br>
+
+                        <input type="submit" value="Add Product" class="btn btn-primary m-2 pb-2">
+                    </form>
+                </div>
+            {% endif %}
+
+            <p class="lead">Go back <a href="{{ url_for('main.home') }}">Home</a></p>
+        </div>
+    </div>
+</main>
+{% endblock %}

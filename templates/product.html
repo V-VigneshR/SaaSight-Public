@@ -1,0 +1,47 @@
+<!-- Fixed Product.html template -->
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<main class="container mt-5">
+    <div class="p-4 p-md-5 mb-4 text-center">
+        <div class="container col-md-6">
+            <h1 style="color: #ffffff;">{{ product.name }}</h1>
+
+            <div class="border rounded py-3 my-3" style="background-color: #1e1e1e; border-color: #444; color: #ffffff;">
+                <div class="h5 py-2" style="color: #ffffff;">
+                     Price: ₹{{ product.price }}
+                </div>
+                <div class="h5 py-2" style="color: #ffffff;">
+                     Quantity: {{ product.quantity }}
+                </div>
+                <div class="h5 py-2" style="color: #ffffff;">
+                     Seller ID: {{ product.seller_id }}
+                </div>
+                <div class="h5 py-2" style="color: #ffffff;">
+                     Description:
+                    <div class="border p-2 text-start" style="background-color: #2a2a2a; border-color: #444; color: #ffffff;">{{ product.description }}</div>
+                </div>
+                <div class="h5 py-3">
+                     <a href="{{ url_for('main.get_reviews', id=product.id) }}" style="color: #ffc107;">View User Reviews</a>
+                </div>
+            </div>
+
+            {% if not current_user.is_authenticated %}
+                <p class="lead" style="color: #ffffff;"> <a href="{{ url_for('auth.login') }}" style="color: #ffc107;">Login</a> to review or interact with this product.</p>
+                <p class="lead" style="color: #ffffff;"> New here? <a href="{{ url_for('auth.new_user') }}" style="color: #ffc107;">Register</a></p>
+            {% else %}
+                <div class="d-flex justify-content-center flex-wrap gap-2">
+                    <a href="{{ url_for('main.add_review', id=product.id) }}" class="btn btn-outline-primary"> Write a Review</a>
+                    <a href="{{ url_for('main.get_reviews', id=product.id) }}" class="btn btn-outline-secondary"> All Reviews</a>
+
+                    <form action="{{ url_for('auth.logout') }}" method="post">
+                        <button type="submit" class="btn btn-danger"> Logout</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}

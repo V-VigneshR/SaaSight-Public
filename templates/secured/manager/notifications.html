@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Flagged Reviews - SaaSight{% endblock %}
+
+{% block content %}
+<main class="container my-5">
+    <h2 class="text-center text-danger"> Flagged Reviews</h2>
+    <hr>
+
+    {% if flagged_reviews %}
+        <ul class="list-group shadow-sm mt-4">
+            {% for review in flagged_reviews %}
+                <li class="list-group-item bg-light bg-opacity-75 border rounded mb-3">
+                    <p><strong>User:</strong> {{ review.user.username }}</p>
+                    <p><strong>Product:</strong>
+                        {% if review.product %}
+                            <a href="{{ url_for('main.product_detail', id=review.product.id) }}">{{ review.product.name }}</a>
+                        {% else %}
+                            <span class="text-muted">[Deleted Product]</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Reason:</strong> {{ review.flag_reason }}</p>
+                    <p><strong>Review:</strong> {{ review.text }}</p>
+
+                    <form action="{{ url_for('main.delete_review', review_id=review.id) }}" method="POST" class="mt-2" onsubmit="return confirm('Remove this flagged review?');">
+                        <button class="btn btn-sm btn-danger"> Remove</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted text-center fs-5"> No flagged reviews at the moment.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('main.manager_secured') }}" class="btn btn-outline-secondary">⬅️ Back to Dashboard</a>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}SaaSight - Home{% endblock %}
+
+{% block content %}
+<main class="container my-4" style="opacity:0; animation: fadeInContent 0.8s forwards;">
+    <div class="text-center">
+        <h1 style="color: #ffffff;">SaaSight</h1>
+    </div>
+
+    {% if products %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mt-4">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm fade-in" style="background-color: #1e1e1e; border: none;">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: #ffffff;">{{ product.name }}</h5>
+                            <p style="color: #ffffff;">Price: ₹{{ product.price }}</p>
+                            <p style="color: #ffffff;">Available: {{ product.quantity }}</p>
+                            <p style="color: #ffffff;">Seller ID: {{ product.seller_id }}</p>
+                            <a href="{{ url_for('main.product_detail', id=product.id) }}" class="btn btn-outline-secondary">View Product</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center mt-5" style="color: #ffffff;">No products available at the moment.</p>
+    {% endif %}
+
+    <div class="d-flex justify-content-center align-items-center gap-3 mt-5 flex-wrap">
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == 'MANAGER' %}
+                <a href="{{ url_for('main.add_product') }}" class="btn btn-success"> Add Product</a>
+            {% endif %}
+            <form action="{{ url_for('auth.logout') }}" method="post" style="margin: 0;">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary">Login</a>
+            <a href="{{ url_for('auth.new_user') }}" class="btn btn-outline-secondary">Register</a>
+        {% endif %}
+    </div>
+
+    {% include 'fragments/about.html' %}
+</main>
+{% endblock %}
