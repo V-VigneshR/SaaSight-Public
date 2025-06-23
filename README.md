@@ -1,67 +1,91 @@
 # SaaSight
 
-**SaaSight** is a cloud-native SaaS product feedback and moderation platform. Inspired by real-world tools like G2, Trustpilot, and Capterra, SaaSight lets users review SaaS tools and product managers monitor, moderate, and manage public sentiment — all with production-grade DevOps workflows.
+**SaaSight** is a cloud-native SaaS product feedback and moderation platform. Inspired by real-world tools like G2, Trustpilot, and Capterra, SaaSight enables users to review SaaS tools and allows product managers to monitor, moderate, and manage public sentiment—all backed by production-grade DevOps workflows.
 
-Deployed via a fully automated **CI/CD pipeline on AWS**, this app is built to simulate scalable, secure, real-time software platforms with role-based functionality.
-
----
-
-##  Features
-
-###  Users (General Public)
-- Register & log in to explore SaaS tools listed on the platform.
-- View detailed product pages with existing reviews and ratings.
-- Submit reviews for any tool (1–5 star system).
-- Flag inappropriate or suspicious reviews.
-- View their own submitted reviews in a dashboard.
-
-###  Managers (Product Owners/Moderators)
-- Login with elevated access.
-- Add new SaaS products to the catalog.
-- Monitor user reviews and respond to feedback.
-- Receive alerts for flagged/inappropriate reviews in a dedicated **Notifications** tab.
-- Remove problematic reviews based on moderation criteria.
+Deployed via a fully automated **CI/CD pipeline on AWS**, the application runs on a secure and scalable infrastructure using **NGINX reverse proxy**, **HTTPS with DuckDNS & Let's Encrypt**, and **EC2-based deployment**.
 
 ---
 
-##  Use Case
+## Features
+
+### Users (General Public)
+
+* Register & log in to explore SaaS tools.
+* View product pages with ratings and reviews.
+* Submit 1–5 star reviews per product.
+* Flag inappropriate reviews.
+* View all personal reviews in the user dashboard.
+
+### Managers (Product Owners / Moderators)
+
+* Login with elevated access.
+* Add/edit SaaS products.
+* Monitor and moderate reviews.
+* View flagged reviews in a **Notifications** section.
+* Remove flagged or inappropriate reviews.
+
+### Admins (Coming Soon)
+
+* Dashboard to manage users and managers.
+* Access analytics and review history.
+
+---
+
+## Use Case
 
 SaaSight is ideal for:
-- **SaaS founders** who want a lightweight feedback & moderation system.
-- **Product managers** managing reputation & review hygiene.
-- **Developers & students** showcasing CI/CD pipelines, role-based access control, and cloud deployment.
-- **DevOps portfolios** that need real-world workflow simulation.
 
-This project simulates a micro version of enterprise-grade feedback platforms and adds DevOps deployment with **scalable architecture and review moderation**.
+* **SaaS founders** building trust via reviews.
+* **Product managers** ensuring feedback hygiene.
+* **DevOps engineers** demonstrating cloud CI/CD infrastructure.
+* **Students and developers** creating production-grade cloud-native apps.
 
----
-
-##  Tech Stack
-
-- **Backend**: Python, Flask, SQLAlchemy ORM
-- **Frontend**: HTML5, Bootstrap 5, Jinja2 templating
-- **Database**: SQLite (can be swapped with PostgreSQL/MySQL)
-- **Authentication**: Flask-Login
-- **Deployment**: Gunicorn + Flask app deployed on **Render** (also deployable to EC2)
-- **Other Tools**: WTForms, Flask-Flash
+This project replicates a mini real-world review system backed by a scalable AWS deployment.
 
 ---
 
-##  CI/CD Pipeline (AWS)
+## Tech Stack
 
-> SaaSight is deployed through a fully automated **CI/CD pipeline** using AWS services.
-
-###  Pipeline Details:
-- **Source Control**: GitHub repo as trigger source
-- **CI**: AWS CodeBuild for building and running Docker containers
-- **Artifact Management**: Optional S3 bucket for storing built artifacts
-- **CD**: AWS CodeDeploy to automatically deploy the Flask app on EC2 with Docker
-- **Orchestration**: CloudFormation for infra provisioning
-
-###  Upcoming (Planned Integration):
-- **Notification System**: SNS alerts for build and deployment success/failure
-- **Rollback Support**: Blue/Green deployment strategy via CodeDeploy appspec hooks
+* **Backend**: Python, Flask, SQLAlchemy ORM
+* **Frontend**: HTML5, Bootstrap 5, Jinja2 templating
+* **Database**: SQLite (dev), can be replaced with PostgreSQL/MySQL
+* **Authentication**: Flask-Login, Role-based Access Control (RBAC)
+* **Server**: NGINX reverse proxy to Flask app
+* **Domain & HTTPS**: DuckDNS custom subdomain + Let's Encrypt
 
 ---
+
+## CI/CD Pipeline (AWS)
+
+> SaaSight runs on a full **CI/CD pipeline** built with AWS-native services.
+
+### Architecture:
+
+* **Source**: GitHub
+* **CI**: AWS CodeBuild (with Python environment & CodeArtifact integration)
+* **Artifact Management**:  S3 bucket for build artifacts
+* **CD**: AWS CodeDeploy deploying to EC2 via appspec.yml
+* **Infrastructure**: AWS CloudFormation (IaC for provisioning EC2, IAM, S3, CodePipeline, etc.)
+* **Reverse Proxy**: NGINX setup on EC2 with HTTPS via DuckDNS & Certbot
+* **Monitoring**: CloudWatch Logs
+
+![CI/CD Architecture](Architecture/CICD.png)
+
+
+---
+
+### Integrated Features:
+
+* **Email Notification System**: Custom Lambda function formats and sends build/deploy status messages via Amazon SNS.
+* **Failure Stage Detection**: Lambda parses CodeBuild/CodeDeploy JSON to extract failing phase.
+* **Rollback Support**: Implemented Blue/Green deployment pattern using CodeDeploy lifecycle hooks.
+
+---
+
+## Security Notes
+
+* Avoid exposing secrets (e.g., CodeArtifact tokens) in public branches.
+* For public sharing, use placeholder tokens or create a read-only mirrored repo.
+
 
 
