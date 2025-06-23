@@ -69,7 +69,7 @@ This project replicates a mini real-world review system backed by a scalable AWS
 * **Reverse Proxy**: NGINX setup on EC2 with HTTPS via DuckDNS & Certbot
 * **Monitoring**: CloudWatch Logs
 
-![CI/CD Architecture](Architecture/CICD.png)
+![CI/CD Architecture](Architecture/CICD.drawio.png)
 
 
 ---
