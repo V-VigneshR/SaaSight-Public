@@ -6,6 +6,12 @@ Deployed via a fully automated **CI/CD pipeline on AWS**, the application runs o
 
 ---
 
+## NOTION DOCUMENTATION AVAILABLE AT:
+
+https://www.notion.so/Cloud-Native-CI-CD-Automation-With-AWS-1ae625ab57fc80af9f05fe912ec7fb5a?source=copy_link
+
+
+---
 ## Features
 
 ### Users (General Public)
