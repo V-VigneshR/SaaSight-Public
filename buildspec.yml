@@ -3,27 +3,41 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.7
+      python: 3.12
     commands:
-      - echo Initializing environment
-      # Authenticate with AWS CodeArtifact to access private PyPI repo
-      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain gamerhub --domain-owner <YOUR_AWS_ACCOUNT_ID> --region <YOUR_AWS_REGION> --query authorizationToken --output text)
-      - pip config set global.index-url "https://aws:${CODEARTIFACT_AUTH_TOKEN}@<YOUR_CODEARTIFACT_REPO_URL>"
+      - echo "Initializing environment (Python $(python --version))"
+      - pip install --upgrade pip
+      - pip install awscli
+      # Authenticate with CodeArtifact (values set via CodeBuild environment variables)
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token \
+          --domain $CODEARTIFACT_DOMAIN \
+          --domain-owner $AWS_ACCOUNT_ID \
+          --region $AWS_REGION \
+          --query authorizationToken --output text)
+      - pip config set global.index-url "https://aws:${CODEARTIFACT_AUTH_TOKEN}@$CODEARTIFACT_REPO/simple/"
+      - pip config set global.trusted-host "$CODEARTIFACT_REPO"
+
   build:
     commands:
-      - echo Build started on `date`
-      - python3 -m venv venv
+      - echo "Build started on $(date)"
+      - python3.12 -m venv venv
       - source venv/bin/activate
-      - pip install -r requirements.txt
-      - echo Running unit tests...
-      - |
-        if ! python -m unittest discover -s tests; then
-          echo "Tests failed but continuing build."
-        fi
+      - pip install --retries 3 -r requirements.txt
+      - echo "Running tests..."
+      - python -m unittest discover -s tests || echo "Tests failed but continuing"
+
+      # Prepare database placeholder
+      - mkdir -p instance
+      - chmod 775 instance
+      - touch instance/saasight.db
+      - chmod 664 instance/saasight.db
+
   post_build:
     commands:
-      - echo Build completed on `date`
-      # No need to zip - CodeBuild will package the files directly
+      - echo "Build completed on $(date)"
+      - echo "Verifying critical files..."
+      - test -f run.py || (echo "Missing run.py!" && exit 1)
+      - test -f config.py || (echo "Missing config.py!" && exit 1)
 
 artifacts:
   files:
