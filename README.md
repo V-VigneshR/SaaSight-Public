@@ -61,6 +61,9 @@ This project replicates a mini real-world review system backed by a scalable AWS
 
 ### Architecture:
 
+![Architecture Diagram](Architecture/CICD.drawio.png)
+
+
 * **Source**: GitHub
 * **CI**: AWS CodeBuild (with Python environment & CodeArtifact integration)
 * **Artifact Management**:  S3 bucket for build artifacts
@@ -68,6 +71,7 @@ This project replicates a mini real-world review system backed by a scalable AWS
 * **Infrastructure**: AWS CloudFormation (IaC for provisioning EC2, IAM, S3, CodePipeline, etc.)
 * **Reverse Proxy**: NGINX setup on EC2 with HTTPS via DuckDNS & Certbot
 * **Monitoring**: CloudWatch Logs
+
 
 
 
